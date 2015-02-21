@@ -1,0 +1,80 @@
+Developing Data Products
+========================================================
+font-family: 'Helvetica'
+transition: linear
+
+Project - part 2
+
+author: kateetak
+date: 21/02/2015
+
+
+The data
+========================================================
+The dataset is sourced from my work. 5 slides will not be enough to explain the full extent of the data but, high level, it can be seen as the data related to a CMS (content management system) and the user interaction.
+
+The data are real and are extracted from a platform used daily by real users, however sensible information have been hidden/trasformed.
+
+```{r slide2_1, echo=FALSE}
+# loading the required libraries
+suppressPackageStartupMessages(library(googleVis))
+
+source("./project_part2_functions.R")
+data <- read.csv("20152801_objectreports_updated.csv",
+                 header = TRUE, stringsAsFactors=TRUE, sep = ",")
+```
+
+Size of the data
+========================================================
+This is the number of the observations:
+```{r slide3_1, echo=FALSE}
+dim(data)[1]
+```
+
+While this is the number of the features:
+```{r slide3_2, echo=FALSE}
+dim(data)[2]
+```
+
+
+Most relevant features
+========================================================
+<small>The following chart shows the value for the galleryLink feature on the data.
+It emerges clearly that the majority of the observation return a **positive value** for this feature.</small>
+```{r slide4_1, results='asis', echo = FALSE}
+pChart <- gvisPieChart(selectedDataOneDim(data, "galleryLink"),
+                   options = list(is3D = "true",
+                                  #legend= "none",
+                                  pieSliceText= "label"))
+
+print(pChart, "chart")
+```
+
+***
+<small>The following chart shows which users are modifying the files in the CMS.
+It emerges clearly that **user1** is modifying a relevant number of files compared to the others.</small>
+```{r slide4_2, results='asis', echo = FALSE}
+pChart <- gvisPieChart(selectedDataOneDim(data, "modifier"),
+                   options = list(is3D = "true",
+                                  #legend= "none",
+                                  pieSliceText= "label"))
+
+print(pChart, "chart")
+```
+
+Correlated features
+====================================
+left: 30%
+<small>The bubbleChart on the right shows a clear correlation between the **number of hyperlinks and the number of the correlations** (a specific characteristic of the data) for the objects in the CMS.</small>
+
+
+***
+```{r slide5, results='asis', echo = FALSE}
+bChart <- gvisBubbleChart(selectedDataTwoDim(data, c("hyperlinkCount", "correlationCount")),
+                      idvar="id", xvar="x", yvar="y", colorvar="freq", sizevar="freq",
+                      options=list(width=600, height=600,
+                                  hAxis="{title:'hyperlinkCount', minValue:-1, maxValue:4}",
+                                  vAxis="{title:'correlationCount', minValue:-1}",
+                                  title = "hyperlinkCount -  CorrelationCount Bubble Chart"))
+print(bChart, "chart")
+```
